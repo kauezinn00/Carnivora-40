@@ -58,7 +58,10 @@
     {id:"motivation",type:"result",title:"Com motivação e persistência, você pode alcançar seu objetivo até mais rápido do que imagina!",body:"Você chegará ao seu objetivo em 4 semanas.",testimonials:true,testimonialStart:5},
     {id:"building",type:"loading",title:"Criando seu plano personalizado",body:"Preparando uma sequência com base nas respostas fornecidas...",testimonials:true,testimonialStart:7}
   ];
-  const state={current:Math.min(Number(sessionStorage.getItem("carnifit_step")||0),steps.length-1),answers:JSON.parse(sessionStorage.getItem("carnifit_answers")||"{}")},app=document.querySelector("#app");
+  sessionStorage.setItem("carnifit_step","0");
+  sessionStorage.setItem("carnifit_answers","{}");
+  sessionStorage.setItem("carnifit_completed","0");
+  const state={current:0,answers:{}},app=document.querySelector("#app");
   const esc=(v="")=>String(v).replace(/[&<>'"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"})[x]);
   const persist=()=>{sessionStorage.setItem("carnifit_step",String(state.current));sessionStorage.setItem("carnifit_answers",JSON.stringify(state.answers))};
   function assetPath(slot){const value=ASSETS[slot];return typeof value==="string"?value:value?.[state.answers.gender]||""}
