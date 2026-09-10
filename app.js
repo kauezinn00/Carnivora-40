@@ -54,8 +54,7 @@
     {id:"secondaryGoal",type:"multi",title:"Além do peso, o que mais você deseja melhorar?",options:[c("Conseguir correr 5 km"),c("Sentir-me melhor diante do espelho"),c("Ter mais saúde e energia"),c("Dormir melhor"),c("Preparar-me para um evento"),c("Sentir-me bem com meu corpo"),c("Ter uma vida mais ativa"),c("Ainda não pensei nisso")]},
     {id:"faceChange",type:"info",image:"faceChange",imageOnly:true,title:"O emagrecimento não fica visível só no corpo",body:""},
     {id:"motivation",type:"result",title:"Com motivação e persistência, você pode alcançar seu objetivo até mais rápido do que imagina!",body:"Você chegará ao seu objetivo em 4 semanas.",testimonials:true,testimonialStart:5},
-    {id:"building",type:"loading",title:"Criando seu plano personalizado",body:"Preparando uma sequência com base nas respostas fornecidas...",testimonials:true,testimonialStart:7},
-    {id:"email",type:"input",title:"Digite seu e-mail para receber o plano personalizado",label:"E-mail",placeholder:"Digite seu e-mail...",inputType:"email",privacy:true}
+    {id:"building",type:"loading",title:"Criando seu plano personalizado",body:"Preparando uma sequência com base nas respostas fornecidas...",testimonials:true,testimonialStart:7}
   ];
   const state={current:Math.min(Number(sessionStorage.getItem("carnifit_step")||0),steps.length-1),answers:JSON.parse(sessionStorage.getItem("carnifit_answers")||"{}")},app=document.querySelector("#app");
   const esc=(v="")=>String(v).replace(/[&<>'"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"})[x]);

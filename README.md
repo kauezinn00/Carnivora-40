@@ -1,6 +1,8 @@
 # Carnívora 40+ — quiz
 
-Quiz mobile-first estático com as 36 telas e a ordem estrutural mapeadas do funil de referência, preparado para publicação na Vercel.
+Quiz mobile-first estático com 35 telas, preparado para publicação na Vercel.
+
+A captura de e-mail foi removida. Depois que a última tela de carregamento chega a 100%, o botão leva diretamente para a página de vendas.
 
 As 12 imagens de comentários autorizadas estão integradas em ordem nas quatro etapas de prova social e na página final da oferta.
 
