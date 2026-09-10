@@ -5,7 +5,8 @@ Os espaços visuais já estão posicionados no layout. Quando os arquivos autori
 - `logo`
 - `genderWoman` e `genderMan`
 - `age18`, `age27`, `age39` e `age50`
-- `macroInfo`, `difference`, `goal` e `foodInfo`
+- `macroInfo` e `difference` já estão preenchidos com as imagens enviadas
+- `goal` e `foodInfo`
 - `mealPlan`, `faceChange` e `visibleChange`
 - `guarantee`
 

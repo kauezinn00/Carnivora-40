@@ -8,7 +8,9 @@ O checkout já está conectado a `https://pay.wiapy.com/KX2LK3vXNU`.
 
 ## Configuração
 
-Edite o objeto `CONFIG` no início de `app.js` para alterar checkout, preço, marca e futuros códigos de rastreamento.
+Edite o objeto `CONFIG` no início de `app.js` para alterar checkout, preço, marca, duração do cronômetro (`offerMinutes`) e futuros códigos de rastreamento.
+
+Os seletores de altura e peso possuem marcador vermelho visível e orientação animada para arrastar. O cronômetro da oferta é compartilhado por todas as aparições da página e não reinicia ao atualizar a mesma sessão.
 
 Todos os parâmetros UTM e `fbclid` recebidos na entrada são mantidos durante o quiz e anexados ao checkout.
 
