@@ -12,6 +12,8 @@ As imagens recebidas foram otimizadas em WebP, sem alterar seu conteúdo, para r
 
 A etapa “Mais de 100 receitas deliciosas” utiliza a imagem local `assets/mais-de-100-receitas.jpeg`. A barra de progresso do quiz possui acabamento totalmente arredondado.
 
+A confirmação da meta utiliza `assets/meta-peso.webp` e mostra um cartão dinâmico com o peso atual e o peso desejado do lead. A etapa de organização do plano utiliza `assets/plano-refeicoes.webp`.
+
 A etapa sobre inchaço no rosto mostra somente a arte correspondente ao gênero selecionado, seguida do botão para continuar.
 
 Na página final, a comparação visual “Agora/Meta” correspondente ao gênero selecionado aparece imediatamente acima do indicador de porcentagens.
@@ -23,6 +25,8 @@ Mais abaixo na oferta, a prova social de antes/depois também acompanha o gêner
 As telas de cálculo animam o círculo, a barra e a porcentagem de 0% a 100% antes de liberar o avanço. As duas telas de resultado exibem um gráfico animado com estimativa fixa de quatro semanas.
 
 O checkout já está conectado a `https://pay.wiapy.com/KX2LK3vXNU`.
+
+O Meta Pixel `1253168553664712` está instalado globalmente com `PageView`, `QuizStarted`, `QuizCompleted`, `ViewContent` e `InitiateCheckout`. O script global da UTMify fornecido pelo cliente também está instalado e carrega `https://cdn.utmify.com.br/scripts/utms/latest.js`.
 
 ## Configuração
 
