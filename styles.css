@@ -80,7 +80,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 @keyframes step-enter{from{opacity:.18;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
 @keyframes buy-pulse{0%,100%{transform:scale(1);box-shadow:0 8px 22px rgba(22,163,74,.3)}50%{transform:scale(1.025);box-shadow:0 10px 28px rgba(22,163,74,.46)}}
 .step-enter{animation:step-enter .24s ease-out both}
-@media(prefers-reduced-motion:reduce){.drag-arrow,.step-enter,.buy-button{animation:none}}
+@media(prefers-reduced-motion:reduce){.drag-arrow,.step-enter,.buy-button,.condition-arrow,.condition-fill{animation:none}}
 .field-label{color:var(--ink);font-size:14px;margin-bottom:-8px}
 .field{width:100%;height:68px;border:1px solid rgba(64,64,64,.25);border-radius:16px;padding:0 16px;color:#4b5563;outline:none}
 .field:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
@@ -157,12 +157,20 @@ button,a{-webkit-tap-highlight-color:transparent}
 .offer-progress-image{width:100%;margin:0 0 16px;overflow:hidden;border-radius:18px;background:#fff}
 .offer-progress-image .step-image{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
 .offer-hero p,.centered{text-align:center}
-.condition{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:16px}
-.condition div{text-align:center}
+.condition{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:16px}
+.condition>.condition-metric{text-align:center;min-width:0}
 .condition span,.condition strong{display:block}
 .condition span{font-size:13px}
-.condition strong{margin-top:4px;font-size:28px;color:var(--red)}
-.condition i{color:var(--red);font-size:24px;font-style:normal}
+.condition strong{margin-top:4px;font-size:28px}
+.condition-current strong{color:var(--red)}
+.condition-potential strong{color:#16a34a}
+.condition-arrow{color:var(--red);font-size:24px;font-style:normal;animation:condition-arrow 1.15s ease-in-out infinite}
+.condition-bar{height:8px;margin-top:10px;overflow:hidden;border-radius:999px;background:#fee2e2}
+.condition-potential .condition-bar{background:#dcfce7}
+.condition-fill{display:block;width:var(--condition-progress);height:100%;border-radius:inherit;background:var(--red);animation:condition-fill 1.1s ease-out both}
+.condition-potential .condition-fill{background:#16a34a}
+@keyframes condition-arrow{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes condition-fill{from{width:0}to{width:var(--condition-progress)}}
 .buy-box{margin:24px auto 0;padding:18px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 8px 30px rgba(17,24,39,.07)}
 .price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .price-row span,.price-row strong,.price-row small{display:block}
@@ -189,6 +197,8 @@ button,a{-webkit-tap-highlight-color:transparent}
 .guarantee{display:grid;grid-template-columns:180px 1fr;gap:26px;align-items:center}
 .guarantee-image .asset-slot{min-height:180px}
 .guarantee h2{text-align:left}
+.guarantee-copy p{margin:0 0 12px}
+.guarantee-copy a{color:var(--red-dark);font-weight:800}
 .last-call{background:#fff5f5}
 .offer-page>footer{padding:24px 16px;text-align:center;font-size:12px;color:#9ca3af}
 @media(min-width:768px){.quiz-page{padding:20px}
