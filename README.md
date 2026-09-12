@@ -28,6 +28,8 @@ O checkout já está conectado a `https://pay.wiapy.com/KX2LK3vXNU`.
 
 O Meta Pixel `1253168553664712` está instalado globalmente com `PageView`, `QuizStarted`, `QuizCompleted`, `ViewContent` e `InitiateCheckout`. O script global da UTMify fornecido pelo cliente também está instalado e carrega `https://cdn.utmify.com.br/scripts/utms/latest.js`.
 
+O Pixel também registra entrada e avanço nas 35 telas: `QuizStep01Viewed` / `QuizStep01Completed` até `QuizStep35Viewed` / `QuizStep35Completed`. Cada evento conta uma vez por sessão da aba, incluindo retornos, múltiplas seleções e recarregamentos. São contagens agregadas para analisar perdas por etapa, sem enviar nome, respostas, medidas ou informações de saúde. O mapa das etapas e as instruções de análise estão em [RASTREAMENTO.md](RASTREAMENTO.md).
+
 ## Configuração
 
 Edite o objeto `CONFIG` no início de `app.js` para alterar checkout, preço, marca, duração do cronômetro (`offerMinutes`) e futuros códigos de rastreamento.

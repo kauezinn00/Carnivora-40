@@ -18,11 +18,46 @@
   };
   const KEYS=["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid","src"],params=new URLSearchParams(location.search),tracking=JSON.parse(sessionStorage.getItem("carnifit_tracking")||"{}");
   KEYS.forEach(k=>{if(params.get(k))tracking[k]=params.get(k)});sessionStorage.setItem("carnifit_tracking",JSON.stringify(tracking));
-  const pixel=(event,data={},custom=false)=>{if(typeof window.fbq==="function")window.fbq(custom?"trackCustom":"track",event,data)};
-  const pixelOnce=(key,event,data={},custom=false)=>{const storageKey=`carnifit_pixel_${key}`;if(sessionStorage.getItem(storageKey))return;pixel(event,data,custom);sessionStorage.setItem(storageKey,"1")};
+  const queuedPixelEvents=new Set();
+  const pixel=(event,data={},custom=false)=>{
+    try {
+      if(typeof window.fbq!=="function")return false;
+      window.fbq(custom?"trackCustom":"track",event,data);
+      return true;
+    } catch {return false}
+  };
+  const pixelOnce=(key,event,data={},custom=false)=>{
+    const storageKey=`carnifit_pixel_${key}`;
+    if(queuedPixelEvents.has(storageKey))return;
+    try {if(sessionStorage.getItem(storageKey))return} catch {}
+    if(!pixel(event,data,custom))return;
+    queuedPixelEvents.add(storageKey);
+    try {sessionStorage.setItem(storageKey,"1")} catch {}
+  };
+  // Altere a versão se a ordem ou a quantidade de etapas mudar.
+  const FUNNEL_VERSION="35_steps_v1";
+  let activeTrackedStep=-1,stepEnteredAt=0;
+  function stepEventData(){
+    const data={funnel_version:FUNNEL_VERSION,step_number:state.current+1,steps_total:steps.length};
+    // Aceita somente um ID numérico de anúncio; nunca envia respostas ou nomes.
+    if(/^\d{5,30}$/.test(tracking.utm_content||""))data.ad_id=tracking.utm_content;
+    return data;
+  }
+  function trackStepView(){
+    if(activeTrackedStep!==state.current){activeTrackedStep=state.current;stepEnteredAt=Date.now()}
+    const number=String(state.current+1).padStart(2,"0");
+    pixelOnce(`${FUNNEL_VERSION}_step_${number}_viewed`,`QuizStep${number}Viewed`,stepEventData(),true);
+  }
+  function trackStepComplete(){
+    const number=String(state.current+1).padStart(2,"0"),data=stepEventData();
+    if(activeTrackedStep===state.current)data.elapsed_seconds=Math.max(0,Math.round((Date.now()-stepEnteredAt)/100)/10);
+    // Se o Pixel ficou disponível depois da renderização, enfileira a entrada primeiro.
+    trackStepView();
+    pixelOnce(`${FUNNEL_VERSION}_step_${number}_completed`,`QuizStep${number}Completed`,data,true);
+  }
   const c=(label,image="")=>({label,image});
   const steps=[
-    {id:"gender",type:"imageGrid",title:"Responda para receber seu plano alimentar personalizado",subtitle:"Selecione seu gênero:",options:[c("Mulher","genderWoman"),c("Homem","genderMan")]},
+    {id:"gender",type:"imageGrid",title:"Responda as perguntas e receba o seu plano carnívoro em dois minutos",subtitle:"Selecione seu gênero:",options:[c("Mulher","genderWoman"),c("Homem","genderMan")]},
     {id:"age",type:"imageGrid",title:"Qual é a sua faixa etária?",options:[c("18 a 26 anos","age18"),c("27 a 38 anos","age27"),c("39 a 50 anos","age39"),c("Mais de 50 anos","age50")]},
     {id:"primaryGoal",type:"choice",iconOptions:true,title:"Qual é o seu principal objetivo com essa alimentação?",options:[c("Melhorar minha aparência","goalAppearance"),c("Cuidar melhor da saúde","goalHealth"),c("Os dois objetivos","goalBoth"),c("Outro objetivo")]},
     {id:"previousExperience",type:"choice",title:"Você já experimentou uma alimentação carnívora?",options:[c("Sim, já experimentei"),c("Já ouvi falar"),c("Ainda não experimentei"),c("Tentei, mas não consegui manter")]},
@@ -39,8 +74,8 @@
     {id:"preview",type:"result",title:"Com base em suas respostas:",body:"Você chegará ao seu objetivo em 4 semanas.",testimonials:true,testimonialStart:1},
     {id:"weeklyActivity",type:"choice",title:"Como você descreve sua atividade física semanal?",options:[c("Pouco ou nenhum exercício"),c("Levemente ativo: 1 a 2 treinos"),c("Moderadamente ativo: 3 a 5 treinos"),c("Muito ativo: 6 a 7 dias"),c("Extremamente ativo ou trabalho físico pesado")]},
     {id:"timeAway",type:"choice",title:"Há quanto tempo você está distante do peso desejado?",options:[c("Menos de 1 ano"),c("De 1 a 3 anos"),c("Mais de 3 anos"),c("Nunca estive no peso que desejo")]},
-    {id:"currentSize",type:"choice",title:"Qual tamanho de roupa você costuma usar?",options:[c("XXXL+"),c("XXXL"),c("XXG"),c("GG"),c("G"),c("M"),c("P ou menor")]},
-    {id:"desiredSize",type:"choice",title:"Qual tamanho de roupa você gostaria de usar?",options:[c("XXXL+"),c("XXXL"),c("XXG"),c("GG"),c("G"),c("M"),c("P ou menor")]},
+    {id:"currentSize",type:"choice",compactGrid:true,title:"Qual tamanho de roupa você costuma usar?",options:[c("XXXL+"),c("XXXL"),c("XXG"),c("GG"),c("G"),c("M"),c("P ou menor")]},
+    {id:"desiredSize",type:"choice",compactGrid:true,title:"Qual tamanho de roupa você gostaria de usar?",options:[c("XXXL+"),c("XXXL"),c("XXG"),c("GG"),c("G"),c("M"),c("P ou menor")]},
     {id:"partialCalculation",type:"loading",title:"Calculando seu plano alimentar",body:"Organizando suas respostas...",testimonials:true,testimonialStart:3},
     {id:"eatingHabits",type:"choice",title:"Como você descreve seus hábitos alimentares?",options:[c("Como quase sempre as mesmas coisas"),c("Faço variações usando os mesmos alimentos"),c("Revezo alguns pratos favoritos"),c("Como de tudo um pouco"),c("Não tenho certeza")]},
     {id:"foodInfo",type:"info",image:"foodInfo",title:"Mais de 100 receitas deliciosas",body:"As sugestões serão organizadas conforme suas preferências e experiência na cozinha."},
@@ -76,14 +111,14 @@
   let stepLoadingId;
   function startStepLoading(){const ring=document.querySelector("#loadingRing"),ringValue=document.querySelector("#loadingRingValue"),bar=document.querySelector("#loadingBar"),percent=document.querySelector("#loadingPercent"),status=document.querySelector("#loadingStatus"),button=document.querySelector("#continue");if(!ring||!ringValue||!bar||!percent||!status||!button)return;const phases=["Analisando suas respostas...","Combinando suas preferências...","Montando seu plano personalizado...","Finalizando os últimos detalhes..."];const started=Date.now(),duration=3200;button.disabled=true;clearInterval(stepLoadingId);const update=()=>{const progress=Math.min(100,Math.round((Date.now()-started)/duration*100));ring.style.setProperty("--progress",progress);bar.style.width=`${progress}%`;percent.textContent=`${progress}%`;status.textContent=phases[Math.min(phases.length-1,Math.floor(progress/26))];if(progress>=100){clearInterval(stepLoadingId);ring.classList.add("done");ringValue.textContent="✓";status.textContent="Plano personalizado concluído!";button.disabled=false}};update();stepLoadingId=setInterval(update,40)}
   function renderStep(){clearInterval(stepLoadingId);const s=steps[state.current];let h=`<h1>${esc(s.title)}</h1>${s.secondaryTitle?`<h2 class="secondary-title">${esc(s.secondaryTitle)}</h2>`:""}${s.subtitle?`<p class="lead">${esc(s.subtitle)}</p>`:""}`;
-    if(["choice","multi","imageGrid"].includes(s.type)){const saved=new Set(Array.isArray(state.answers[s.id])?state.answers[s.id]:state.answers[s.id]?[state.answers[s.id]]:[]),image=s.type==="imageGrid";h+=`<div class="answers ${image?"image-grid":""}">${s.options.map((x,i)=>option(x,i,saved.has(x.label),image,s.iconOptions)).join("")}</div>${s.type==="multi"?`<button class="continue-button" id="continue" ${saved.size?"":"disabled"}>Continuar</button>`:""}`}
+    if(["choice","multi","imageGrid"].includes(s.type)){const saved=new Set(Array.isArray(state.answers[s.id])?state.answers[s.id]:state.answers[s.id]?[state.answers[s.id]]:[]),image=s.type==="imageGrid";h+=`<div class="answers ${image?"image-grid":""} ${s.compactGrid?"compact-grid":""}">${s.options.map((x,i)=>option(x,i,saved.has(x.label),image,s.iconOptions)).join("")}</div>${s.type==="multi"?`<button class="continue-button" id="continue" ${saved.size?"":"disabled"}>Continuar</button>`:""}`}
     else if(s.type==="range")h+=ruler(s,state.answers[s.id]??s.value)+`<button class="continue-button" id="continue">Continuar</button>`;
     else if(s.type==="input")h+=`<label class="field-label" for="field">${esc(s.label)}</label><input class="field" id="field" type="${s.inputType}" value="${esc(state.answers[s.id]||"")}" placeholder="${esc(s.placeholder)}">${s.privacy?`<p class="privacy"><strong>Seus dados são protegidos.</strong><br>O e-mail será usado somente para informações relacionadas ao acesso.</p>`:""}<button class="continue-button" id="continue" disabled>Continuar</button>`;
     else if(s.type==="info")h=s.imageOnly?`<div class="info-image info-image-only">${asset(s.image,s.title)}</div><button class="continue-button" id="continue">Continuar</button>`:`${assetPath(s.image)?`<div class="info-image">${asset(s.image,s.title)}</div>`:""}<h1>${esc(s.title)}</h1><p class="info-copy">${esc(s.body)}</p>${s.id==="goalRegistered"?goalComparison():""}<button class="continue-button" id="continue">Continuar</button>`;
     else if(s.type==="result")h+=`${resultChart()}${testimonials(2,s.testimonialStart)}<button class="continue-button" id="continue">Continuar</button>`;
     else if(s.type==="loading")h=`<div class="loading-ring" id="loadingRing" style="--progress:0"><span id="loadingRingValue">0%</span></div><h1>${esc(s.title)}</h1><div class="calculation"><div><span id="loadingBar" style="width:0%"></span></div><strong id="loadingPercent">0%</strong><p id="loadingStatus">${esc(s.body)}</p></div>${s.testimonials?testimonials(2,s.testimonialStart):""}<button class="continue-button" id="continue" disabled>Continuar</button>`;
-    app.innerHTML=`<main class="quiz-page">${top()}<section class="question-card">${h}</section><footer>© 2026 ${esc(CONFIG.brand)}</footer></main>`;bind(s);window.scrollTo({top:0})}
-  function next(){if(state.current===steps.length-1){sessionStorage.setItem("carnifit_completed","1");pixelOnce("quiz_completed","QuizCompleted",{},true);renderOffer();return}state.current++;persist();renderStep()}
+    app.innerHTML=`<main class="quiz-page">${top()}<section class="question-card">${h}</section><footer>© 2026 ${esc(CONFIG.brand)}</footer></main>`;bind(s);window.scrollTo({top:0});trackStepView()}
+  function next(){trackStepComplete();if(state.current===steps.length-1){sessionStorage.setItem("carnifit_completed","1");pixelOnce("quiz_completed","QuizCompleted",{},true);renderOffer();return}state.current++;persist();renderStep()}
   function bind(s){document.querySelector("#back")?.addEventListener("click",()=>{state.current=Math.max(0,state.current-1);persist();renderStep()});document.querySelectorAll("[data-option]").forEach(b=>b.addEventListener("click",()=>{if(s.id==="gender")pixelOnce("quiz_started","QuizStarted",{},true);const picked=s.options[Number(b.dataset.option)].label;if(s.type==="multi"){const saved=new Set(state.answers[s.id]||[]),exclusive=/nenhuma|não utilizo/i.test(picked);if(exclusive){saved.clear();saved.add(picked)}else{[...saved].filter(x=>/nenhuma|não utilizo/i.test(x)).forEach(x=>saved.delete(x));saved.has(picked)?saved.delete(picked):(!s.max||saved.size<s.max)&&saved.add(picked)}state.answers[s.id]=[...saved];persist();renderStep()}else{state.answers[s.id]=picked;persist();next()}}));const range=document.querySelector("#range");if(range){const stage=document.querySelector("#rulerStage"),syncRuler=()=>{document.querySelector("#rangeValue").textContent=range.value;document.querySelector("#rulerTape")?.style.setProperty("--ruler-offset",`${(Number(range.value)-s.min)*-15}px`);stage?.setAttribute("aria-valuenow",range.value)};range.addEventListener("input",syncRuler);if(stage){let dragging=false,startX=0,startValue=Number(range.value);const finish=()=>{dragging=false;stage.classList.remove("dragging")};stage.addEventListener("pointerdown",e=>{dragging=true;startX=e.clientX;startValue=Number(range.value);stage.classList.add("dragging");stage.setPointerCapture?.(e.pointerId);e.preventDefault()});stage.addEventListener("pointermove",e=>{if(!dragging)return;range.value=Math.max(s.min,Math.min(s.max,Math.round(startValue-(e.clientX-startX)/15)));syncRuler();e.preventDefault()});stage.addEventListener("pointerup",finish);stage.addEventListener("pointercancel",finish);stage.addEventListener("lostpointercapture",finish);stage.addEventListener("keydown",e=>{const amount=e.key==="ArrowRight"||e.key==="ArrowUp"?1:e.key==="ArrowLeft"||e.key==="ArrowDown"?-1:e.key==="PageUp"?10:e.key==="PageDown"?-10:0;if(!amount)return;e.preventDefault();range.value=Math.max(s.min,Math.min(s.max,Number(range.value)+amount));syncRuler()})}document.querySelector("#continue").addEventListener("click",()=>{state.answers[s.id]=Number(range.value);persist();next()})}const field=document.querySelector("#field");if(field){const btn=document.querySelector("#continue"),valid=()=>s.inputType==="email"?/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim()):field.value.trim().length>=2,sync=()=>btn.disabled=!valid();field.addEventListener("input",sync);sync();btn.addEventListener("click",()=>{if(!valid())return;state.answers[s.id]=field.value.trim();persist();next()})}if(["info","result","loading","multi"].includes(s.type))document.querySelector("#continue")?.addEventListener("click",next);if(s.type==="loading")startStepLoading()}
   function checkout(){const u=new URL(CONFIG.checkoutUrl);Object.entries(tracking).forEach(([k,v])=>v&&u.searchParams.set(k,v));return u.toString()}
   function personalizedPriorities(){
