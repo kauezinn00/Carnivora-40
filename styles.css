@@ -14,6 +14,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .brand-lockup{width:224px;max-width:100%;height:122px;display:grid;place-items:center;overflow:hidden;margin:0 auto}
 .brand-lockup .brand-image{width:100%;height:auto;max-width:none;max-height:none;transform:scale(1.35)}
 .offer-container>.brand-lockup{margin-bottom:24px}
+.offer-page .brand-lockup{width:168px;height:92px}
 .brand-word{color:var(--red);font-size:29px;line-height:1;font-weight:900;font-style:italic;letter-spacing:-2px;transform:skew(-6deg)}
 .brand-word span{color:var(--ink)}
 .progress-track{height:8px;width:100%;position:relative;overflow:hidden;border-radius:999px;background:rgba(239,68,68,.1);margin-bottom:36px}
@@ -31,6 +32,8 @@ button,a{-webkit-tap-highlight-color:transparent}
 .answer{width:100%;min-height:66px;position:relative;display:flex;align-items:center;gap:12px;padding:12px 44px 12px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);text-align:left;cursor:pointer;box-shadow:none;transition:border-color .16s,background-color .16s}
 .answer:hover,.answer.selected{border-color:var(--red);background:#fffafa}
 .answer-label{font-size:16px;line-height:20px}
+.emoji-answer{gap:13px}
+.answer-emoji{flex:0 0 28px;display:grid;place-items:center;font-size:24px;line-height:1}
 .answer-check{position:absolute;right:16px;width:22px;height:22px;border:1px solid #d1d5db;border-radius:50%;display:grid;place-items:center;color:transparent;font-size:13px}
 .answer.selected .answer-check{color:#fff;border-color:var(--red);background:var(--red)}
 .image-answer{min-height:288px;display:block;padding:0;overflow:hidden}
@@ -42,7 +45,9 @@ button,a{-webkit-tap-highlight-color:transparent}
 .mini-picture{position:absolute;left:0;top:0;bottom:0;width:72px;overflow:hidden;background:#f3f4f6;border-radius:15px 0 0 15px}
 .mini-picture .step-image{width:100%;height:100%;object-fit:cover;object-position:center 20%}
 .continue-button,.buy-button{width:100%;min-height:56px;display:flex;align-items:center;justify-content:center;border:0;border-radius:12px;padding:14px 18px;background:var(--red);color:#fff;font-weight:800;text-align:center;text-decoration:none;cursor:pointer;box-shadow:0 8px 18px rgba(239,68,68,.2);transition:transform .15s,background-color .15s}
-.continue-button:hover,.buy-button:hover{background:var(--red-dark);transform:translateY(-1px)}
+.continue-button:hover{background:var(--red-dark);transform:translateY(-1px)}
+.buy-button{background:#16a34a;box-shadow:0 8px 22px rgba(22,163,74,.3);animation:buy-pulse 1.8s ease-in-out infinite}
+.buy-button:hover{background:#15803d;transform:translateY(-1px)}
 .continue-button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .unit-toggle{display:flex;justify-content:center;margin-top:4px}
 .unit-toggle button{min-width:54px;height:34px;border:1px solid var(--line);background:#fff;color:var(--muted)}
@@ -72,7 +77,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 .drag-arrow-right{animation:nudge-right 1.25s ease-in-out infinite}
 @keyframes nudge-left{0%,100%{transform:translateX(2px)}50%{transform:translateX(-5px)}}
 @keyframes nudge-right{0%,100%{transform:translateX(-2px)}50%{transform:translateX(5px)}}
-@media(prefers-reduced-motion:reduce){.drag-arrow{animation:none}}
+@keyframes step-enter{from{opacity:.18;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes buy-pulse{0%,100%{transform:scale(1);box-shadow:0 8px 22px rgba(22,163,74,.3)}50%{transform:scale(1.025);box-shadow:0 10px 28px rgba(22,163,74,.46)}}
+.step-enter{animation:step-enter .24s ease-out both}
+@media(prefers-reduced-motion:reduce){.drag-arrow,.step-enter,.buy-button{animation:none}}
 .field-label{color:var(--ink);font-size:14px;margin-bottom:-8px}
 .field{width:100%;height:68px;border:1px solid rgba(64,64,64,.25);border-radius:16px;padding:0 16px;color:#4b5563;outline:none}
 .field:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
@@ -189,6 +197,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 @media(max-width:520px){.brand-area{width:126px;height:69px;margin-bottom:12px}
 .brand-area .brand-lockup{width:126px;height:69px}
 .brand-area .brand-image{max-width:126px;max-height:69px}
+.offer-page .brand-lockup{width:126px;height:69px}
 .progress-track{margin-bottom:24px}
 .question-card h1,.secondary-title{font-size:22px}
 .image-answer{min-height:240px}
