@@ -231,7 +231,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .offer-timer{margin:22px auto 18px;text-align:center}
 .timer-label{display:block;margin-bottom:8px;color:var(--ink);font-size:14px;font-weight:700}
 .timer-digits{display:flex;align-items:center;justify-content:center;gap:8px}
-.timer-digits>span{display:grid;grid-template-columns:auto auto;align-items:end;gap:5px;min-width:78px;padding:8px 10px;border-radius:10px;background:linear-gradient(180deg,#ef4444 0%,#dc2626 100%);color:#fff;box-shadow:0 8px 18px rgba(239,68,68,.28)}
+.timer-digits>span{display:grid;grid-template-columns:auto auto;align-items:end;gap:5px;min-width:78px;padding:8px 10px;border-radius:10px;background:linear-gradient(180deg,#ef4444 0%,#dc2626 100%);color:#fff;box-shadow:0 8px 18px rgba(239,68,68,.25)}
 .timer-digits strong{font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
 .timer-digits small{font-size:11px;color:#fee2e2}
 .timer-digits>b{color:var(--red-dark);font-size:26px;font-weight:900}
@@ -252,14 +252,11 @@ button,a{-webkit-tap-highlight-color:transparent}
   .timer-digits strong{font-size:25px}
   .wide-image .asset-slot{min-height:260px}
 }
-
-
-/* Ajustes cirúrgicos da página de vendas — V1 */
 .what-you-get-section{background:#fff}
-.receive-list{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px}
-.receive-list li{display:grid;grid-template-columns:42px 28px minmax(0,1fr);gap:10px;align-items:start;padding:15px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(17,24,39,.035)}
-.receive-emoji{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;background:#fff7ed;font-size:24px;line-height:1}
-.receive-check{display:flex;align-items:center;justify-content:center;width:24px;height:24px;margin-top:9px;border-radius:999px;background:#16a34a;color:#fff;font-size:15px;font-weight:900;line-height:1}
+.receive-list{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:14px}
+.receive-list li{display:grid;grid-template-columns:44px 28px minmax(0,1fr);gap:12px;align-items:start;padding:16px 15px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(17,24,39,.035)}
+.receive-emoji{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:#fff7ed;font-size:25px;line-height:1}
+.receive-check{display:flex;align-items:center;justify-content:center;width:24px;height:24px;margin-top:10px;border-radius:999px;background:#16a34a;color:#fff;font-size:15px;font-weight:900;line-height:1}
 .receive-list strong{display:block;margin-top:2px;color:var(--ink);font-size:16px;line-height:1.3}
 .receive-list p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
 .personalized-solutions-section{background:#fafafa}
@@ -269,7 +266,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .social-proof-image img{display:block;width:100%;height:auto;object-fit:contain}
 .social-proof-note{margin:10px 0 0!important;text-align:center;color:#9ca3af;font-size:11px;line-height:1.4}
 @media(max-width:520px){
-  .receive-list li{grid-template-columns:38px 24px minmax(0,1fr);gap:8px;padding:13px 12px}
+  .receive-list li{grid-template-columns:38px 24px minmax(0,1fr);gap:9px;padding:14px 12px}
   .receive-emoji{width:38px;height:38px;font-size:22px}
   .receive-check{width:22px;height:22px;margin-top:8px;font-size:14px}
   .receive-list strong{font-size:15px}
